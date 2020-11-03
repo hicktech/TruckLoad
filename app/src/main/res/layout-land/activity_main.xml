@@ -8,26 +8,27 @@
 
     <com.google.android.material.slider.Slider
         android:id="@+id/slider"
-        android:layout_width="400dp"
+        android:layout_width="640dp"
         android:layout_height="128dp"
         android:elevation="5dp"
+        android:orientation="vertical"
         android:stepSize="10.0"
         android:valueFrom="0.0"
         android:valueTo="100.0"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/camView"
         app:layout_constraintStart_toStartOf="@+id/camView"
-        app:layout_constraintTop_toBottomOf="@+id/camView"
         app:trackHeight="14dp" />
 
     <view
         android:id="@+id/camView"
         class="com.google.android.exoplayer2.ui.PlayerView"
         id="@+id/view"
-        android:layout_width="480dp"
-        android:layout_height="360dp"
+        android:layout_width="720dp"
+        android:layout_height="480dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
         android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,7 +38,8 @@
         android:id="@+id/imageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/camView"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/quantum_ic_bigtop_updates_white_24" />
@@ -47,9 +49,10 @@
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:foreground="@drawable/quantum_ic_settings_white_24"
-        app:layout_constraintBottom_toTopOf="@+id/camView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
