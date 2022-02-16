@@ -3,52 +3,56 @@ package com.github.jw3.tl
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.rtsp.RtspDefaultClient
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.FixedTrackSelection
+import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.upstream.LoadErrorHandlingPolicy
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var player: SimpleExoPlayer
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val user = "admin"
-        val pass = "password"
-        val host = "192.168.1.1"
-        val minBuffMs = 750
-        val maxBuffMs = 750
-        val playBuffMs = 500
-        val rebuffMs = 750
+        findViewById<StyledPlayerView>(R.id.camView)?.let {
 
-        println("creating player ==== $user $pass $host")
+            val user = "admin"
+            val pass = "password123"
+            val host = "192.168.1.72"
+            val minBuffMs = 250
+            val maxBuffMs = 500
+            val playBuffMs = 250
+            val rebuffMs = 250
 
-        val uri = Uri.parse("rtsp://$user:$pass@$host/cam/realmonitor?channel=1&subtype=0")
+            println("creating player ==== $user $pass $host")
 
-        val lc = DefaultLoadControl.Builder()
-            .setBufferDurationsMs(minBuffMs, maxBuffMs, playBuffMs, rebuffMs)
-            .createDefaultLoadControl()
-        val ts = DefaultTrackSelector(applicationContext)
+            val uri = Uri.parse("rtsp://$user:$pass@$host/cam/realmonitor?channel=1&subtype=0")
 
-        val f = RtspMediaSource.Factory(RtspDefaultClient.factory())
-            .setIsLive(true)
-            .createMediaSource(uri)
+            val f = RtspMediaSource.Factory()
+            //f.setDebugLoggingEnabled(true)
 
-        player = ExoPlayerFactory.newSimpleInstance(applicationContext, ts, lc)
-        player.prepare(
-            f
-        )
-        player.playWhenReady = true
+            val lc = DefaultLoadControl.Builder()
+                .setBufferDurationsMs(minBuffMs, maxBuffMs, playBuffMs, rebuffMs)
+                .build()
 
+            val source = f.createMediaSource(MediaItem.fromUri(uri))
+            val player = ExoPlayer.Builder(applicationContext).setLoadControl(lc).build()
 
+            player.setMediaSource(source)
+            player.prepare()
 
+            player.playWhenReady = true
+            it.player = player
+        }
     }
 
     var delay = 5
