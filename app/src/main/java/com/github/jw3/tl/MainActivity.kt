@@ -2,20 +2,17 @@ package com.github.jw3.tl
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
-import android.view.View
-import android.widget.Toast
+import android.widget.Chronometer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.FixedTrackSelection
-import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.upstream.LoadErrorHandlingPolicy
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,10 +21,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         findViewById<StyledPlayerView>(R.id.camView)?.let {
-
             val user = "admin"
             val pass = "password123"
-            val host = "192.168.1.72"
+            val host = "192.168.1.73"
             val minBuffMs = 250
             val maxBuffMs = 500
             val playBuffMs = 250
@@ -52,6 +48,35 @@ class MainActivity : AppCompatActivity() {
 
             player.playWhenReady = true
             it.player = player
+        }
+
+
+        switch1.setOnClickListener {
+            if (switch1.isChecked) startTimer() else stopTimer()
+        }
+    }
+
+    private var timeInSeconds = 0
+    private var mHandler: Handler? = null
+
+    private fun startTimer() {
+        mHandler = Handler(Looper.getMainLooper())
+        mStatusChecker.run()
+    }
+
+    private fun stopTimer() {
+        mHandler?.removeCallbacks(mStatusChecker)
+    }
+
+    private var mStatusChecker: Runnable = object : Runnable {
+        override fun run() {
+            try {
+                timeInSeconds += 1
+                timer.text = String.format("%d:%02d", timeInSeconds / 60, timeInSeconds % 60)
+                bushelCounter.text = String.format("%.1f", timeInSeconds * .47)
+            } finally {
+                mHandler!!.postDelayed(this, 1000)
+            }
         }
     }
 
