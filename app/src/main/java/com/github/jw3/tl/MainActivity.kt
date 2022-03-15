@@ -6,8 +6,10 @@ import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
 import android.widget.Chronometer
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.isVisible
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -54,6 +56,15 @@ class MainActivity : AppCompatActivity() {
         switch1.setOnClickListener {
             if (switch1.isChecked) startTimer() else stopTimer()
         }
+
+        saveButton.setOnLongClickListener {
+            Toast.makeText(applicationContext, "This load has been recorded", Toast.LENGTH_SHORT).show()
+            true
+        }
+
+        saveButton.setOnClickListener {
+            Toast.makeText(applicationContext, "Press and hold to save", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private var timeInSeconds = 0
@@ -62,10 +73,15 @@ class MainActivity : AppCompatActivity() {
     private fun startTimer() {
         mHandler = Handler(Looper.getMainLooper())
         mStatusChecker.run()
+
+        saveButton.isEnabled = false
     }
 
     private fun stopTimer() {
         mHandler?.removeCallbacks(mStatusChecker)
+
+        saveButton.isVisible = true
+        saveButton.isEnabled = true
     }
 
     private var mStatusChecker: Runnable = object : Runnable {
