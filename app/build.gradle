@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.hicktech:exoplayer:dev-v2-SNAPSHOT'
+    implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
