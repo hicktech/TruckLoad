@@ -5,19 +5,26 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
-import android.widget.Chronometer
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
+import com.github.jw3.tl.db.Load
+import com.github.jw3.tl.db.Repository
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var db: Repository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<StyledPlayerView>(R.id.camView)?.let {
             val user = "admin"
             val pass = "password123"
-            val host = "192.168.1.73"
+            val host = "192.168.1.72"
             val minBuffMs = 250
             val maxBuffMs = 500
             val playBuffMs = 250
@@ -52,13 +59,21 @@ class MainActivity : AppCompatActivity() {
             it.player = player
         }
 
-
         switch1.setOnClickListener {
             if (switch1.isChecked) startTimer() else stopTimer()
         }
 
         saveButton.setOnLongClickListener {
-            Toast.makeText(applicationContext, "This load has been recorded", Toast.LENGTH_SHORT).show()
+            db.insertLoad(Load("default", timeInSeconds, bushelEstimate, System.currentTimeMillis() / 1000))
+            Toast.makeText(applicationContext, "This load has been recorded", Toast.LENGTH_SHORT)
+                .show()
+
+            resetUI()
+
+            db.allLoads().forEach { load ->
+                println(load)
+            }
+
             true
         }
 
@@ -68,6 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var timeInSeconds = 0
+    private var bushelEstimate = 0.0
     private var mHandler: Handler? = null
 
     private fun startTimer() {
@@ -88,23 +104,33 @@ class MainActivity : AppCompatActivity() {
         override fun run() {
             try {
                 timeInSeconds += 1
-                timer.text = String.format("%d:%02d", timeInSeconds / 60, timeInSeconds % 60)
-                bushelCounter.text = String.format("%.1f", timeInSeconds * .47)
+                updateCounters()
             } finally {
                 mHandler!!.postDelayed(this, 1000)
             }
         }
     }
 
-    var delay = 5
+    private fun resetUI() {
+        timeInSeconds = 0
+        updateCounters()
+        saveButton.isVisible = false
+    }
 
+    private fun updateCounters() {
+        bushelEstimate = timeInSeconds * .47
+        timer.text = String.format("%d:%02d", timeInSeconds / 60, timeInSeconds % 60)
+        bushelCounter.text = String.format("%.1f", bushelEstimate)
+    }
+
+    var delay = 5
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         println(event)
         when (keyCode) {
             KeyEvent.KEYCODE_VOLUME_UP -> {
                 event?.let {
-                    if(event.repeatCount > delay && event.repeatCount % delay == 0) {
+                    if (event.repeatCount > delay && event.repeatCount % delay == 0) {
                         slider.value = Math.min(100f, slider.value + slider.stepSize)
                     }
                 }
