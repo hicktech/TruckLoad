@@ -7,6 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 class TruckLoadApp: Application() {
     override fun onCreate() {
         super.onCreate()
-        applicationContext.deleteDatabase("LoadsDb")
+        // todo;; move this to a ui control
+        //applicationContext.deleteDatabase("LoadsDb")
     }
 }

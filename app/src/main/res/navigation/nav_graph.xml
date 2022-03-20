@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loadControl">
+
+    <fragment
+        android:id="@+id/loadControl"
+        android:name="com.github.jw3.tl.ui.LoadControl"
+        android:label="fragment_load_control"
+        tools:layout="@layout/fragment_load_control" >
+        <action
+            android:id="@+id/action_loadControl_to_loadList"
+            app:destination="@id/loadList" />
+    </fragment>
+    <fragment
+        android:id="@+id/loadList"
+        android:name="com.github.jw3.tl.ui.LoadList"
+        android:label="load_list_fragment"
+        tools:layout="@layout/load_list_fragment" >
+        <action
+            android:id="@+id/action_loadList_pop"
+            app:popUpTo="@id/loadList"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
