@@ -1,0 +1,20 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Camera">
+        <EditTextPreference
+            app:key="camera_url"
+            app:title="Host"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="camera_user"
+            app:title="User"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="camera_pass"
+            app:title="Password"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

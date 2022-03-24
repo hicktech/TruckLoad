@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.jw3.tl.R
 import com.github.jw3.tl.db.Load
 import com.github.jw3.tl.db.Repository
+import com.github.jw3.tl.prefs.CamPrefs
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -29,6 +30,9 @@ class LoadControl : Fragment() {
     @Inject
     lateinit var db: Repository
 
+    @Inject
+    lateinit var camera: CamPrefs
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,26 +40,23 @@ class LoadControl : Fragment() {
         val f =  inflater.inflate(R.layout.fragment_load_control, container, false)
 
         f.findViewById<StyledPlayerView>(R.id.camView)?.let {
-            val user = "admin"
-            val pass = "password123"
-            val host = "192.168.1.72"
+            // todo;; move the buffer config to settings
             val minBuffMs = 250
             val maxBuffMs = 500
             val playBuffMs = 250
             val rebuffMs = 250
 
-            println("creating player ==== $user $pass $host")
+            val url = "rtsp://${camera.user}:${camera.pass}@${camera.host}/cam/realmonitor?channel=1&subtype=0"
+            println("creating player ==== $url")
 
-            val uri = Uri.parse("rtsp://$user:$pass@$host/cam/realmonitor?channel=1&subtype=0")
-
-            val f = RtspMediaSource.Factory()
+            val rtspFactory = RtspMediaSource.Factory()
             //f.setDebugLoggingEnabled(true)
 
             val lc = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(minBuffMs, maxBuffMs, playBuffMs, rebuffMs)
                 .build()
 
-            val source = f.createMediaSource(MediaItem.fromUri(uri))
+            val source = rtspFactory.createMediaSource(MediaItem.fromUri(Uri.parse(url)))
             val player = ExoPlayer.Builder(it.context).setLoadControl(lc).build()
 
             player.setMediaSource(source)
@@ -91,7 +92,9 @@ class LoadControl : Fragment() {
             findNavController().navigate(R.id.action_loadControl_to_loadList)
         }
 
-
+        f.settingsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_global_settingsFragment)
+        }
 
         return f;
     }
