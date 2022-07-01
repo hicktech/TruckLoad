@@ -46,7 +46,7 @@ class LoadControl : Fragment() {
             val playBuffMs = 250
             val rebuffMs = 250
 
-            val url = "rtsp://${camera.user}:${camera.pass}@${camera.host}/cam/realmonitor?channel=1&subtype=0"
+            val url = "rtsp://${camera.user}:${String(camera.pass)}@${camera.host}/cam/realmonitor?channel=1&subtype=0"
             println("creating player ==== $url")
 
             val rtspFactory = RtspMediaSource.Factory()
