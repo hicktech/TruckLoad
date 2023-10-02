@@ -1,13 +1,13 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
-    compileSdkVersion 31
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.github.jw3.tl"

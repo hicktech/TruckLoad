@@ -21,8 +21,14 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_load_control.*
-import kotlinx.android.synthetic.main.fragment_load_control.view.*
+import kotlinx.android.synthetic.main.fragment_load_control.bushelCounter
+import kotlinx.android.synthetic.main.fragment_load_control.saveButton
+import kotlinx.android.synthetic.main.fragment_load_control.switch1
+import kotlinx.android.synthetic.main.fragment_load_control.timer
+import kotlinx.android.synthetic.main.fragment_load_control.view.saveButton
+import kotlinx.android.synthetic.main.fragment_load_control.view.settingsButton
+import kotlinx.android.synthetic.main.fragment_load_control.view.showListButton
+import kotlinx.android.synthetic.main.fragment_load_control.view.switch1
 import javax.inject.Inject
 
 @AndroidEntryPoint
